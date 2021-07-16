@@ -28,7 +28,7 @@ resource "aws_networkfirewall_firewall_policy" "this" {
     dynamic "stateless_rule_group_reference" {
       for_each = local.stateless_rule_groups_names
       content {
-        priority     = 1 + index(local.stateless_rule_groups_names, stateless_rule_group_reference.value)
+        priority     = var.rule_groups[index(var.rule_groups[*]["name"], stateless_rule_group_reference.value)]["priority"]
         resource_arn = aws_networkfirewall_rule_group.this[stateless_rule_group_reference.value].arn
       }
     }

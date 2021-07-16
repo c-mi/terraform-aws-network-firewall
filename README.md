@@ -66,6 +66,7 @@ Terraform module that creates network firewal, network firewall policy, rule gro
           capacity    = 100
           type        = "STATELESS"
           description = "Block ICMP traffic"
+          priority    = 1
 
           stateless_rule = [
             {
