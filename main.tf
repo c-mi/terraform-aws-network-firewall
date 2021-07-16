@@ -60,28 +60,28 @@ resource "aws_networkfirewall_rule_group" "this" {
     content {
 
       dynamic "rule_variables" {
-        for_each = lookup(rule_group.value, "rule_variables", [])
+        for_each = length(lookup(rule_group.value, "rule_variables", [])) > 0 ? [1] : []
 
         content {
 
           dynamic "ip_sets" {
-            for_each = lookup(rule_variables.value, "ip_set", null) == null ? [] : [rule_variables.value["key"]]
+            for_each = [for variable in rule_group.value["rule_variables"] : variable if lookup(variable, "ip_set", "") != ""]
 
             content {
-              key = rule_variables.value["key"]
+              key = ip_sets.value["key"]
               ip_set {
-                definition = rule_variables.value["ip_set"]
+                definition = ip_sets.value["ip_set"]
               }
             }
           }
 
           dynamic "port_sets" {
-            for_each = lookup(rule_variables.value, "port_set", null) == null ? [] : [rule_variables.value["key"]]
+            for_each = [for variable in rule_group.value["rule_variables"] : variable if lookup(variable, "port_set", "") != ""]
 
             content {
-              key = rule_variables.value["key"]
+              key = port_sets.value["key"]
               port_set {
-                definition = rule_variables.value["port_set"]
+                definition = port_sets.value["port_set"]
               }
             }
           }

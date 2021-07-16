@@ -78,6 +78,25 @@ Terraform module that creates network firewal, network firewall policy, rule gro
 
             }
           ]
+        },
+        {
+          name        = "example"
+          capacity    = 100
+          type        = "STATEFUL"
+          description = "Example Suricata compatible rule group that uses the variables"
+
+          rule_variables = [
+            {
+              key    = "HTTP_SERVERS"
+              ip_set = ["10.0.2.0/24", "10.0.1.19/32"]
+            },
+            {
+              key      = "HTTP_PORTS"
+              port_set = ["80", "8080"]
+            }
+          ]
+
+          rules_string = "alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS (msg:\".htpasswd access attempt\"; flow:to_server,established; content:\".htpasswd\"; nocase; sid:210503; rev:1;)"
         }
       ]
 
