@@ -5,7 +5,7 @@ variable "name" {
 
 variable "subnet_mapping" {
   type        = list
-  description = "Subnet mapping for firewall"
+  description = "Subnet mapping for the firewall"
 }
 
 variable "vpc_id" {
@@ -13,10 +13,9 @@ variable "vpc_id" {
   description = "Vpc id in which firewall will be created"
 }
 
-variable "tags" {
-  type        = map(any)
-  description = "Tags for all resources"
-  default     = {}
+variable "rule_groups" {
+  type        = any
+  description = "Rule groups to use in network firewall"
 }
 
 variable "stateless_default_actions" {
@@ -31,7 +30,14 @@ variable "stateless_fragment_default_actions" {
   default     = ["aws:forward_to_sfe"]
 }
 
-variable "rule_groups" {
+variable "logging_configuration" {
   type        = any
-  description = "Rule groups to use in network firewall"
+  description = "Logging configuration"
+  default     = []
+}
+
+variable "tags" {
+  type        = map(any)
+  description = "Tags for all resources"
+  default     = {}
 }

@@ -208,3 +208,28 @@ resource "aws_networkfirewall_rule_group" "this" {
 
   tags = merge(var.tags)
 }
+
+resource "aws_networkfirewall_logging_configuration" "this" {
+  count = length(var.logging_configuration) > 0 ? 1 : 0
+
+  firewall_arn = aws_networkfirewall_firewall.this.arn
+
+  logging_configuration {
+
+    dynamic "log_destination_config" {
+      for_each = toset(var.logging_configuration[*]["log_destination_config"])
+
+      content {
+        log_destination = {
+          logGroup       = lookup(log_destination_config.value, "logGroup", null)
+          bucketName     = lookup(log_destination_config.value, "bucketName", null)
+          prefix         = lookup(log_destination_config.value, "prefix", null)
+          deliveryStream = lookup(log_destination_config.value, "deliveryStream", null)
+        }
+        log_destination_type = log_destination_config.value["log_destination_type"]
+        log_type             = log_destination_config.value["log_type"]
+      }
+    }
+
+  }
+}
