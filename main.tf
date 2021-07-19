@@ -105,7 +105,8 @@ resource "aws_networkfirewall_rule_group" "this" {
               source_port      = stateful_rule.value.source_port
             }
             rule_option {
-              keyword = stateful_rule.value.rule_option
+              keyword  = stateful_rule.value.rule_option
+              settings = lookup(stateful_rule.value, "settings", null)
             }
           }
         }
